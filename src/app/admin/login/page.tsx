@@ -2,12 +2,10 @@ import LoginForm from '@/components/admin/LoginForm';
 
 export default function LoginPage() {
     return (
-        <main className="flex items-center justify-center md:h-screen">
-            <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
-                <div className="flex h-20 w-full items-end rounded-lg bg-blue-500 p-3 md:h-36">
-                    <div className="w-32 text-white md:w-36">
-                        Admin Portal
-                    </div>
+        <main className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+            <div style={{ width: '100%', maxWidth: '400px' }}>
+                <div className="card" style={{ marginBottom: '20px', textAlign: 'center' }}>
+                    <h1 style={{ fontSize: '1.5rem', marginBottom: '0' }}>Admin Portal</h1>
                 </div>
                 <LoginForm />
             </div>

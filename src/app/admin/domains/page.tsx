@@ -1,5 +1,6 @@
 import prisma from '@/lib/db';
 import { deleteDomain, addDomain } from '../actions';
+import { Trash2 } from 'lucide-react';
 
 export default async function DomainsPage() {
     const domains = await prisma.domain.findMany({
@@ -9,43 +10,46 @@ export default async function DomainsPage() {
 
     return (
         <main>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Domains</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Domains</h1>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow mb-8">
-                <h2 className="text-lg font-semibold mb-4">Add New Domain</h2>
-                <form action={addDomain} className="flex gap-4">
+            <div className="card" style={{ marginBottom: '32px' }}>
+                <h2 style={{ fontSize: '1.125rem', marginBottom: '16px' }}>Add New Domain</h2>
+                <form action={addDomain} style={{ display: 'flex', gap: '16px' }}>
                     <input
                         type="text"
                         name="domain"
                         placeholder="example.com"
-                        className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="input"
+                        style={{ flex: 1 }}
                         required
                     />
-                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add</button>
+                    <button type="submit" className="btn btn-primary">Add Domain</button>
                 </form>
             </div>
 
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domain</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Active Inboxes</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Domain</th>
+                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Active Inboxes</th>
+                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
+                            <th style={{ padding: '16px', textAlign: 'right', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody>
                         {domains.map((domain) => (
-                            <tr key={domain.id}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{domain.domain}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{domain._count.inboxes}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{domain.createdAt.toLocaleDateString()}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <tr key={domain.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <td style={{ padding: '16px' }}>{domain.domain}</td>
+                                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{domain._count.inboxes}</td>
+                                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{domain.createdAt.toLocaleDateString()}</td>
+                                <td style={{ padding: '16px', textAlign: 'right' }}>
                                     <form action={deleteDomain.bind(null, domain.id)}>
-                                        <button type="submit" className="text-red-600 hover:text-red-900">Delete</button>
+                                        <button type="submit" className="btn btn-ghost" style={{ color: 'var(--error)', padding: '8px' }}>
+                                            <Trash2 size={16} />
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

@@ -6,15 +6,26 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-            <div className="w-full flex-none md:w-64 bg-gray-900 text-white p-6">
-                <div className="flex flex-col h-full justify-between">
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg-primary)' }}>
+            <div style={{ display: 'flex', flex: 1 }}>
+                <div style={{
+                    width: '250px',
+                    backgroundColor: 'var(--bg-tertiary)',
+                    padding: '24px',
+                    borderRight: '1px solid var(--border-color)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    position: 'sticky',
+                    top: 0,
+                    height: '100vh'
+                }}>
                     <div>
-                        <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
-                        <nav className="space-y-2">
-                            <a href="/admin/dashboard" className="block py-2 px-4 rounded hover:bg-gray-800">Dashboard</a>
-                            <a href="/admin/inboxes" className="block py-2 px-4 rounded hover:bg-gray-800">Inboxes</a>
-                            <a href="/admin/domains" className="block py-2 px-4 rounded hover:bg-gray-800">Domains</a>
+                        <h2 style={{ fontSize: '1.25rem', marginBottom: '24px', color: 'var(--text-primary)', fontWeight: 'bold' }}>Admin Panel</h2>
+                        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <a href="/admin/dashboard" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }}>Dashboard</a>
+                            <a href="/admin/inboxes" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }}>Inboxes</a>
+                            <a href="/admin/domains" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }}>Domains</a>
                         </nav>
                     </div>
                     <form
@@ -23,13 +34,15 @@ export default function AdminLayout({
                             await signOut();
                         }}
                     >
-                        <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-800 p-3 text-sm font-medium hover:bg-gray-700 hover:text-white md:flex-none md:justify-start md:p-2 md:px-3">
-                            <div className="hidden md:block">Sign Out</div>
+                        <button className="btn btn-secondary" style={{ width: '100%' }}>
+                            Sign Out
                         </button>
                     </form>
                 </div>
+                <div style={{ flex: 1, padding: '40px', overflowY: 'auto' }}>
+                    {children}
+                </div>
             </div>
-            <div className="flex-grow p-6 md:overflow-y-auto md:p-12">{children}</div>
         </div>
     );
 }

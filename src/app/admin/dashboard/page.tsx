@@ -13,56 +13,55 @@ export default async function DashboardPage() {
 
     return (
         <main>
-            <h1 className="mb-4 text-xl md:text-2xl">
+            <h1 style={{ marginBottom: '24px', fontSize: '1.5rem' }}>
                 Dashboard Overview
             </h1>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '24px',
+                marginBottom: '40px'
+            }}>
                 {/* Card 1 */}
-                <div className="rounded-xl bg-gray-50 p-2 shadow-sm">
-                    <div className="flex p-4">
-                        <h3 className="ml-2 text-sm font-medium">Total Inboxes</h3>
-                    </div>
-                    <p className="truncate rounded-xl bg-white px-4 py-8 text-center text-2xl">
+                <div className="card">
+                    <div style={{ marginBottom: '8px', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Total Inboxes</div>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>
                         {inboxCount}
                     </p>
                 </div>
                 {/* Card 2 */}
-                <div className="rounded-xl bg-gray-50 p-2 shadow-sm">
-                    <div className="flex p-4">
-                        <h3 className="ml-2 text-sm font-medium">Active Domains</h3>
-                    </div>
-                    <p className="truncate rounded-xl bg-white px-4 py-8 text-center text-2xl">
+                <div className="card">
+                    <div style={{ marginBottom: '8px', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Active Domains</div>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>
                         {domainCount}
                     </p>
                 </div>
                 {/* Card 3 */}
-                <div className="rounded-xl bg-gray-50 p-2 shadow-sm">
-                    <div className="flex p-4">
-                        <h3 className="ml-2 text-sm font-medium">Total Messages</h3>
-                    </div>
-                    <p className="truncate rounded-xl bg-white px-4 py-8 text-center text-2xl">
+                <div className="card">
+                    <div style={{ marginBottom: '8px', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Total Messages</div>
+                    <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>
                         {totalMessages}
                     </p>
                 </div>
             </div>
 
-            <div className="mt-6">
-                <h2 className="text-lg font-bold mb-4">Recent Inboxes</h2>
-                <div className="bg-white rounded-lg shadow overflow-hidden">
-                    <table className="min-w-full">
-                        <thead className="bg-gray-100">
+            <div>
+                <h2 style={{ fontSize: '1.25rem', marginBottom: '16px' }}>Recent Inboxes</h2>
+                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expires</th>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Address</th>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Expires</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody>
                             {recentInboxes.map((inbox) => (
-                                <tr key={inbox.id}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{inbox.address}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inbox.createdAt.toLocaleDateString()}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inbox.publicExpiresAt.toLocaleDateString()}</td>
+                                <tr key={inbox.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                    <td style={{ padding: '16px' }}>{inbox.address}</td>
+                                    <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{inbox.createdAt.toLocaleDateString()}</td>
+                                    <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{inbox.publicExpiresAt.toLocaleDateString()}</td>
                                 </tr>
                             ))}
                         </tbody>

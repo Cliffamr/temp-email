@@ -1,5 +1,6 @@
 import prisma from '@/lib/db';
 import { deleteInbox } from '../actions';
+import { Trash2 } from 'lucide-react';
 
 export default async function InboxesPage() {
     const inboxes = await prisma.inbox.findMany({
@@ -9,29 +10,31 @@ export default async function InboxesPage() {
 
     return (
         <main>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Inboxes</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Inboxes</h1>
             </div>
 
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Access</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Address</th>
+                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
+                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Last Access</th>
+                            <th style={{ padding: '16px', textAlign: 'right', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody>
                         {inboxes.map((inbox) => (
-                            <tr key={inbox.id}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{inbox.address}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inbox.createdAt.toLocaleDateString()}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inbox.lastAccessAt.toLocaleDateString()}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <tr key={inbox.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <td style={{ padding: '16px' }}>{inbox.address}</td>
+                                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{inbox.createdAt.toLocaleDateString()}</td>
+                                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{inbox.lastAccessAt.toLocaleDateString()}</td>
+                                <td style={{ padding: '16px', textAlign: 'right' }}>
                                     <form action={deleteInbox.bind(null, inbox.id)}>
-                                        <button type="submit" className="text-red-600 hover:text-red-900">Delete</button>
+                                        <button type="submit" className="btn btn-ghost" style={{ color: 'var(--error)', padding: '8px' }}>
+                                            <Trash2 size={16} />
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

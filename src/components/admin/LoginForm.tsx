@@ -19,22 +19,22 @@ export default function LoginForm() {
     }, []);
 
     return (
-        <form action={formAction} className="space-y-3">
-            <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-                <h1 className="mb-3 text-2xl">
+        <form action={formAction} className="card">
+            <div style={{ padding: '10px' }}>
+                <h2 style={{ marginBottom: '20px', fontSize: '1.25rem' }}>
                     Please log in to continue.
-                </h1>
-                <div className="w-full">
-                    <div>
+                </h2>
+                <div>
+                    <div className="input-group">
                         <label
-                            className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+                            className="input-label"
                             htmlFor="email"
                         >
                             Email
                         </label>
-                        <div className="relative">
+                        <div>
                             <input
-                                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                className="input"
                                 id="email"
                                 type="email"
                                 name="email"
@@ -43,16 +43,16 @@ export default function LoginForm() {
                             />
                         </div>
                     </div>
-                    <div className="mt-4">
+                    <div className="input-group">
                         <label
-                            className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+                            className="input-label"
                             htmlFor="password"
                         >
                             Password
                         </label>
-                        <div className="relative">
+                        <div>
                             <input
-                                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                className="input"
                                 id="password"
                                 type="password"
                                 name="password"
@@ -64,17 +64,15 @@ export default function LoginForm() {
                     </div>
                 </div>
                 <div
-                    className="flex h-8 items-end space-x-1"
                     aria-live="polite"
                     aria-atomic="true"
+                    style={{ minHeight: '32px' }}
                 >
                     {errorMessage && (
-                        <>
-                            <p className="text-sm text-red-500">{errorMessage}</p>
-                        </>
+                        <p className="alert alert-error" style={{ padding: '8px', fontSize: '0.875rem' }}>{errorMessage}</p>
                     )}
                 </div>
-                <Button className="mt-4 w-full" aria-disabled={isPending}>
+                <Button className="btn btn-primary" style={{ width: '100%', marginTop: '16px' }} aria-disabled={isPending}>
                     Log in
                 </Button>
             </div>
@@ -86,7 +84,7 @@ function Button({ children, className, ...rest }: React.ButtonHTMLAttributes<HTM
     return (
         <button
             {...rest}
-            className={`flex h-10 items-center justify-center rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50 ${className}`}
+            className={className}
         >
             {children}
         </button>
