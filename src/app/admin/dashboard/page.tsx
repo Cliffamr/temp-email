@@ -1,5 +1,7 @@
 import prisma from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
     const inboxCount = await prisma.inbox.count();
     const domainCount = await prisma.domain.count();

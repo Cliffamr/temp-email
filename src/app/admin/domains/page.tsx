@@ -1,4 +1,6 @@
 import prisma from '@/lib/db';
+
+export const dynamic = 'force-dynamic';
 import { deleteDomain, addDomain } from '../actions';
 import { Trash2 } from 'lucide-react';
 
