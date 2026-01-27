@@ -24,6 +24,7 @@ export default function AdminLayout({
                         <h2 style={{ fontSize: '1.25rem', marginBottom: '24px', color: 'var(--text-primary)', fontWeight: 'bold' }}>Admin Panel</h2>
                         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <a href="/admin/dashboard" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }}>Dashboard</a>
+                            <a href="/admin/users" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }}>Users</a>
                             <a href="/admin/inboxes" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }}>Inboxes</a>
                             <a href="/admin/domains" className="btn btn-ghost" style={{ justifyContent: 'flex-start' }}>Domains</a>
                         </nav>

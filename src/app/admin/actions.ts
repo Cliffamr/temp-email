@@ -48,3 +48,40 @@ export async function addDomain(formData: FormData) {
         throw new Error('Failed to create domain');
     }
 }
+
+export async function createUser(formData: FormData) {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const role = formData.get('role') as string;
+
+    if (!email || !password) return;
+
+    try {
+        const bcrypt = require('bcrypt');
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await prisma.user.create({
+            data: {
+                email,
+                password: hashedPassword,
+                role: role || 'USER',
+            }
+        });
+        revalidatePath('/admin/users');
+    } catch (error) {
+        console.error('Failed to create user:', error);
+        throw new Error('Failed to create user');
+    }
+}
+
+export async function deleteUser(userId: string) {
+    try {
+        await prisma.user.delete({
+            where: { id: userId },
+        });
+        revalidatePath('/admin/users');
+    } catch (error) {
+        console.error('Failed to delete user:', error);
+        throw new Error('Failed to delete user');
+    }
+}
