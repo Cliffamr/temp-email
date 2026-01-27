@@ -1,11 +1,11 @@
 ; DNS Records for Cloudflare Email Routing
-; Domain: kalana.indevs.in
+; Domain: fufufafu.my.id
 ; Import this file to Cloudflare DNS
 
 ; MX Records for Email Routing
-kalana.indevs.in.  1  IN  MX  2   route3.mx.cloudflare.net.
-kalana.indevs.in.  1  IN  MX  36  route1.mx.cloudflare.net.
-kalana.indevs.in.  1  IN  MX  42  route2.mx.cloudflare.net.
+fufufafu.my.id.  1  IN  MX  2   route3.mx.cloudflare.net.
+fufufafu.my.id.  1  IN  MX  36  route1.mx.cloudflare.net.
+fufufafu.my.id.  1  IN  MX  42  route2.mx.cloudflare.net.
 
 ; SPF Record
-kalana.indevs.in.  1  IN  TXT  "v=spf1 include:_spf.cloudflare.com -all"
+fufufafu.my.id.  1  IN  TXT  "v=spf1 include:_spf.cloudflare.com -all"
