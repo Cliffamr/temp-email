@@ -52,3 +52,11 @@ model Message {
   @@index([inboxId])
   @@index([createdAt])
 }
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
