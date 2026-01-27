@@ -6,9 +6,24 @@ import { Info, X } from 'lucide-react';
 
 export default function RestoreInboxForm() {
     const router = useRouter();
-    const [address, setAddress] = useState('');
+    const [alias, setAlias] = useState('');
+    const [selectedDomain, setSelectedDomain] = useState('');
+    const [domains, setDomains] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        // Fetch available domains
+        fetch('/api/inboxes')
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success && data.data.domains.length > 0) {
+                    setDomains(data.data.domains);
+                    setSelectedDomain(data.data.domains[0]);
+                }
+            })
+            .catch(console.error);
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -16,6 +31,7 @@ export default function RestoreInboxForm() {
         setIsLoading(true);
 
         try {
+            const address = `${alias}@${selectedDomain}`;
             const response = await fetch('/api/inboxes/restore', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -47,7 +63,7 @@ export default function RestoreInboxForm() {
         <form onSubmit={handleSubmit} className="card" style={{ maxWidth: 560, margin: '0 auto' }}>
             <div className="alert alert-info" style={{ marginBottom: 24 }}>
                 <Info size={20} />
-                <span>Enter your email address to access your inbox.</span>
+                <span>Enter your email alias to access your inbox.</span>
             </div>
 
             {error && (
@@ -58,26 +74,52 @@ export default function RestoreInboxForm() {
             )}
 
             <div className="input-group">
-                <label htmlFor="address" className="input-label">
-                    Email Address
+                <label htmlFor="alias" className="input-label">
+                    Email Alias
                 </label>
-                <input
-                    type="email"
-                    id="address"
+                <div className="input-with-addon">
+                    <input
+                        type="text"
+                        id="alias"
+                        className="input"
+                        placeholder="your-alias"
+                        value={alias}
+                        onChange={(e) => setAlias(e.target.value.toLowerCase())}
+                        required
+                        autoFocus
+                        autoComplete="off"
+                    />
+                    <span className="input-addon">@</span>
+                </div>
+            </div>
+
+            <div className="input-group">
+                <label htmlFor="domain" className="input-label">
+                    Domain
+                </label>
+                <select
+                    id="domain"
                     className="input"
-                    placeholder="your-alias@domain.com"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value.toLowerCase())}
+                    value={selectedDomain}
+                    onChange={(e) => setSelectedDomain(e.target.value)}
                     required
-                    autoFocus
-                    autoComplete="email"
-                />
+                >
+                    {domains.length === 0 ? (
+                        <option value="">Loading domains...</option>
+                    ) : (
+                        domains.map((domain) => (
+                            <option key={domain} value={domain}>
+                                {domain}
+                            </option>
+                        ))
+                    )}
+                </select>
             </div>
 
             <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={isLoading || !address}
+                disabled={isLoading || !alias || !selectedDomain}
                 style={{ width: '100%', marginTop: 8 }}
             >
                 {isLoading ? (
