@@ -20,17 +20,29 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Validate domain
-        const domainValidation = validateDomain(domain);
-        if (!domainValidation.valid) {
+        // Validate domain - check if it exists in database
+        const normalizedAlias = alias.toLowerCase().trim();
+        const normalizedDomain = domain.toLowerCase().trim();
+
+        if (!normalizedDomain) {
             return NextResponse.json(
-                { error: domainValidation.error },
+                { error: 'Domain is required' },
                 { status: 400 }
             );
         }
 
-        const normalizedAlias = alias.toLowerCase().trim();
-        const normalizedDomain = domain.toLowerCase().trim();
+        // Check if domain exists in database and is active
+        const domainRecord = await prisma.domain.findUnique({
+            where: { domain: normalizedDomain },
+        });
+
+        if (!domainRecord || !domainRecord.isActive) {
+            return NextResponse.json(
+                { error: 'Domain is not allowed' },
+                { status: 400 }
+            );
+        }
+
         const address = `${normalizedAlias}@${normalizedDomain}`;
 
         // Check if address already exists and is not expired
@@ -49,20 +61,6 @@ export async function POST(request: NextRequest) {
         if (existingInbox) {
             await prisma.inbox.delete({
                 where: { id: existingInbox.id },
-            });
-        }
-
-        // Get or create domain record
-        let domainRecord = await prisma.domain.findUnique({
-            where: { domain: normalizedDomain },
-        });
-
-        if (!domainRecord) {
-            domainRecord = await prisma.domain.create({
-                data: {
-                    domain: normalizedDomain,
-                    isActive: true,
-                },
             });
         }
 
@@ -105,7 +103,14 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
     try {
-        const domains = getAllowedDomains();
+        // Fetch domains from database instead of env variable
+        const domainRecords = await prisma.domain.findMany({
+            where: { isActive: true },
+            orderBy: { domain: 'asc' },
+        });
+
+        const domains = domainRecords.map(d => d.domain);
+
         return NextResponse.json({
             success: true,
             data: {

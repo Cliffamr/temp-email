@@ -30,13 +30,8 @@ export async function GET(
             );
         }
 
-        // Check if public access expired (token required)
-        if (inbox.publicExpiresAt < new Date()) {
-            return NextResponse.json(
-                { error: 'Public access expired. Please use "Restore Inbox" with your access token.' },
-                { status: 403 }
-            );
-        }
+        // Public expiration check removed as per user request
+        // Messages are accessible as long as the inbox exists
 
         // Fetch the message
         const message = await prisma.message.findFirst({
