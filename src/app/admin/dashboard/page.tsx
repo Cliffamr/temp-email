@@ -50,24 +50,26 @@ export default async function DashboardPage() {
             <div>
                 <h2 style={{ fontSize: '1.25rem', marginBottom: '16px' }}>Recent Inboxes</h2>
                 <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
-                            <tr>
-                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Address</th>
-                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
-                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Expires</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {recentInboxes.map((inbox) => (
-                                <tr key={inbox.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                                    <td style={{ padding: '16px' }}>{inbox.address}</td>
-                                    <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{inbox.createdAt.toLocaleDateString()}</td>
-                                    <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{inbox.publicExpiresAt.toLocaleDateString()}</td>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
+                            <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
+                                <tr>
+                                    <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Address</th>
+                                    <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
+                                    <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Expires</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {recentInboxes.map((inbox) => (
+                                    <tr key={inbox.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                        <td style={{ padding: '16px' }}>{inbox.address}</td>
+                                        <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{inbox.createdAt.toLocaleDateString()}</td>
+                                        <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{inbox.publicExpiresAt.toLocaleDateString()}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </main>

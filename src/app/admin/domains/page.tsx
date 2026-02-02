@@ -32,32 +32,34 @@ export default async function DomainsPage() {
             </div>
 
             <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
-                        <tr>
-                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Domain</th>
-                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Active Inboxes</th>
-                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
-                            <th style={{ padding: '16px', textAlign: 'right', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {domains.map((domain) => (
-                            <tr key={domain.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                                <td style={{ padding: '16px' }}>{domain.domain}</td>
-                                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{domain._count.inboxes}</td>
-                                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{domain.createdAt.toLocaleDateString()}</td>
-                                <td style={{ padding: '16px', textAlign: 'right' }}>
-                                    <form action={deleteDomain.bind(null, domain.id)}>
-                                        <button type="submit" className="btn btn-ghost" style={{ color: 'var(--error)', padding: '8px' }}>
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </form>
-                                </td>
+                <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
+                        <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
+                            <tr>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Domain</th>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Active Inboxes</th>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
+                                <th style={{ padding: '16px', textAlign: 'right', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {domains.map((domain) => (
+                                <tr key={domain.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                    <td style={{ padding: '16px' }}>{domain.domain}</td>
+                                    <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{domain._count.inboxes}</td>
+                                    <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{domain.createdAt.toLocaleDateString()}</td>
+                                    <td style={{ padding: '16px', textAlign: 'right' }}>
+                                        <form action={deleteDomain.bind(null, domain.id)}>
+                                            <button type="submit" className="btn btn-ghost" style={{ color: 'var(--error)', padding: '8px' }}>
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
     );
