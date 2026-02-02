@@ -85,3 +85,34 @@ export async function deleteUser(userId: string) {
         throw new Error('Failed to delete user');
     }
 }
+
+export async function updateUser(formData: FormData) {
+    const id = formData.get('id') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const role = formData.get('role') as string;
+
+    if (!id || !email) return;
+
+    try {
+        const data: any = {
+            email,
+            role: role || 'USER',
+        };
+
+        if (password && password.trim() !== '') {
+            const bcrypt = require('bcrypt');
+            data.password = await bcrypt.hash(password, 10);
+        }
+
+        await prisma.user.update({
+            where: { id },
+            data,
+        });
+
+        revalidatePath('/admin/users');
+    } catch (error) {
+        console.error('Failed to update user:', error);
+        throw new Error('Failed to update user');
+    }
+}

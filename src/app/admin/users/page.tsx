@@ -2,6 +2,7 @@ import prisma from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 import { createUser, deleteUser } from '../actions';
+import EditUserButton from '@/components/admin/EditUserButton';
 import { Trash2 } from 'lucide-react';
 
 export default async function UsersPage() {
@@ -43,43 +44,48 @@ export default async function UsersPage() {
             </div>
 
             <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
-                        <tr>
-                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Email</th>
-                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Role</th>
-                            <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
-                            <th style={{ padding: '16px', textAlign: 'right', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user) => (
-                            <tr key={user.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                                <td style={{ padding: '16px' }}>{user.email}</td>
-                                <td style={{ padding: '16px' }}>
-                                    <span style={{
-                                        padding: '4px 8px',
-                                        borderRadius: '4px',
-                                        background: user.role === 'ADMIN' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(34, 197, 94, 0.2)',
-                                        color: user.role === 'ADMIN' ? '#a5b4fc' : '#4ade80',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 'bold'
-                                    }}>
-                                        {user.role}
-                                    </span>
-                                </td>
-                                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{user.createdAt.toLocaleDateString()}</td>
-                                <td style={{ padding: '16px', textAlign: 'right' }}>
-                                    <form action={deleteUser.bind(null, user.id)}>
-                                        <button type="submit" className="btn btn-ghost" style={{ color: 'var(--error)', padding: '8px' }}>
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </form>
-                                </td>
+                <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
+                        <thead style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
+                            <tr>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Email</th>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Role</th>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Created</th>
+                                <th style={{ padding: '16px', textAlign: 'right', fontWeight: 500, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                    <td style={{ padding: '16px' }}>{user.email}</td>
+                                    <td style={{ padding: '16px' }}>
+                                        <span style={{
+                                            padding: '4px 8px',
+                                            borderRadius: '4px',
+                                            background: user.role === 'ADMIN' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(34, 197, 94, 0.2)',
+                                            color: user.role === 'ADMIN' ? '#a5b4fc' : '#4ade80',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            {user.role}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{user.createdAt.toLocaleDateString()}</td>
+                                    <td style={{ padding: '16px', textAlign: 'right' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                            <EditUserButton user={user} />
+                                            <form action={deleteUser.bind(null, user.id)}>
+                                                <button type="submit" className="btn btn-ghost" style={{ color: 'var(--error)', padding: '8px' }}>
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
     );

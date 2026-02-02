@@ -1,11 +1,11 @@
 ; DNS Records for Cloudflare Email Routing
-; Domain: fufufafu.my.id
+; Domain: kingabuy.indevs.in
 ; Import this file to Cloudflare DNS
 
 ; MX Records for Email Routing
-fufufafu.my.id.  1  IN  MX  2   route3.mx.cloudflare.net.
-fufufafu.my.id.  1  IN  MX  36  route1.mx.cloudflare.net.
-fufufafu.my.id.  1  IN  MX  42  route2.mx.cloudflare.net.
+kingabuy.indevs.in.  1  IN  MX  2   route3.mx.cloudflare.net.
+kingabuy.indevs.in.  1  IN  MX  36  route1.mx.cloudflare.net.
+kingabuy.indevs.in.  1  IN  MX  42  route2.mx.cloudflare.net.
 
 ; SPF Record
-fufufafu.my.id.  1  IN  TXT  "v=spf1 include:_spf.cloudflare.com -all"
+kingabuy.indevs.in.  1  IN  TXT  "v=spf1 include:_spf.cloudflare.com -all"
