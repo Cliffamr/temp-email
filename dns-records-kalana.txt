@@ -1,11 +1,11 @@
 ; DNS Records for Cloudflare Email Routing
-; Domain: kingabuy.indevs.in
+; Domain: mail.kalane.dev
 ; Import this file to Cloudflare DNS
 
 ; MX Records for Email Routing
-kingabuy.indevs.in.  1  IN  MX  2   route3.mx.cloudflare.net.
-kingabuy.indevs.in.  1  IN  MX  36  route1.mx.cloudflare.net.
-kingabuy.indevs.in.  1  IN  MX  42  route2.mx.cloudflare.net.
+mail.kalane.dev.  1  IN  MX  2   route3.mx.cloudflare.net.
+mail.kalane.dev.  1  IN  MX  36  route1.mx.cloudflare.net.
+mail.kalane.dev.  1  IN  MX  42  route2.mx.cloudflare.net.
 
 ; SPF Record
-kingabuy.indevs.in.  1  IN  TXT  "v=spf1 include:_spf.cloudflare.com -all"
+mail.kalane.dev.  1  IN  TXT  "v=spf1 include:_spf.cloudflare.com -all"

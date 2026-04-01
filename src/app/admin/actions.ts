@@ -5,9 +5,18 @@ import { revalidatePath } from 'next/cache';
 
 export async function deleteInbox(inboxId: string) {
     try {
-        await prisma.inbox.delete({
-            where: { id: inboxId },
+        await prisma.$transaction(async (tx) => {
+            // Delete associated messages first
+            await tx.message.deleteMany({
+                where: { inboxId }
+            });
+            
+            // Delete the inbox
+            await tx.inbox.delete({
+                where: { id: inboxId },
+            });
         });
+        
         revalidatePath('/admin/inboxes');
         revalidatePath('/admin/dashboard');
     } catch (error) {
@@ -18,9 +27,34 @@ export async function deleteInbox(inboxId: string) {
 
 export async function deleteDomain(domainId: string) {
     try {
-        await prisma.domain.delete({
-            where: { id: domainId },
+        // Find associated inboxes
+        const inboxes = await prisma.inbox.findMany({
+            where: { domainId },
+            select: { id: true }
         });
+        
+        const inboxIds = inboxes.map(i => i.id);
+
+        // Delete all dependent records in a transaction to ensure atomicity
+        await prisma.$transaction(async (tx) => {
+            if (inboxIds.length > 0) {
+                // Delete messages for these inboxes
+                await tx.message.deleteMany({
+                    where: { inboxId: { in: inboxIds } }
+                });
+                
+                // Delete the inboxes themselves
+                await tx.inbox.deleteMany({
+                    where: { domainId }
+                });
+            }
+            
+            // Finally delete the domain
+            await tx.domain.delete({
+                where: { id: domainId },
+            });
+        });
+
         revalidatePath('/admin/domains');
         revalidatePath('/admin/dashboard');
     } catch (error) {

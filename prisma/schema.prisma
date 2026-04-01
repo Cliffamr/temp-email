@@ -28,7 +28,7 @@ model Inbox {
   publicExpiresAt DateTime  // Public access expires after 24 hours
   lastAccessAt    DateTime  @default(now())
   domainId        String
-  domain          Domain    @relation(fields: [domainId], references: [id])
+  domain          Domain    @relation(fields: [domainId], references: [id], onDelete: Cascade)
   messages        Message[]
 
   @@index([address])
