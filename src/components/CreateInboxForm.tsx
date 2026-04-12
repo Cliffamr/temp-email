@@ -1,8 +1,35 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Copy, AlertTriangle, Info, X } from 'lucide-react';
+import { Check, Copy, AlertTriangle, Info, X, Shuffle } from 'lucide-react';
+
+const ADJECTIVES = [
+    'swift', 'bright', 'calm', 'dark', 'eager', 'fair', 'glad', 'happy',
+    'keen', 'lucky', 'neat', 'proud', 'quick', 'rare', 'safe', 'tall',
+    'warm', 'wise', 'bold', 'cool', 'deep', 'fast', 'gold', 'huge',
+    'iron', 'jade', 'kind', 'lean', 'mild', 'nova', 'open', 'pure',
+    'rich', 'slim', 'true', 'vast', 'wild', 'zen', 'blue', 'cyan',
+    'dusk', 'epic', 'fern', 'glow', 'haze', 'icy', 'jazz', 'lush',
+    'mint', 'neon', 'opal', 'pine', 'ruby', 'sage', 'teal', 'aqua',
+];
+
+const NOUNS = [
+    'fox', 'owl', 'cat', 'wolf', 'bear', 'hawk', 'deer', 'lion',
+    'star', 'moon', 'wind', 'rain', 'fire', 'leaf', 'wave', 'peak',
+    'lake', 'reef', 'glen', 'cove', 'arch', 'mesa', 'dune', 'vale',
+    'frog', 'dove', 'swan', 'lynx', 'crow', 'hare', 'puma', 'wren',
+    'ruby', 'jade', 'onyx', 'opal', 'flux', 'bolt', 'beam', 'glow',
+    'mist', 'dawn', 'dusk', 'echo', 'fury', 'halo', 'iris', 'nova',
+    'orb', 'pike', 'quay', 'rift', 'sage', 'tide', 'veil', 'zeal',
+];
+
+function generateRandomAlias(): string {
+    const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
+    const noun = NOUNS[Math.floor(Math.random() * NOUNS.length)];
+    const num = Math.floor(Math.random() * 900) + 100; // 100–999
+    return `${adj}-${noun}-${num}`;
+}
 
 interface CreatedInbox {
     inboxId: string;
@@ -21,7 +48,14 @@ export default function CreateInboxForm() {
     const [createdInbox, setCreatedInbox] = useState<CreatedInbox | null>(null);
     const [copied, setCopied] = useState<'address' | 'token' | null>(null);
 
+    const handleRandomize = useCallback(() => {
+        setAlias(generateRandomAlias());
+    }, []);
+
     useEffect(() => {
+        // Auto-generate a random alias on mount
+        handleRandomize();
+
         // Fetch available domains
         fetch('/api/inboxes')
             .then((res) => res.json())
@@ -32,7 +66,7 @@ export default function CreateInboxForm() {
                 }
             })
             .catch(console.error);
-    }, []);
+    }, [handleRandomize]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -144,9 +178,20 @@ export default function CreateInboxForm() {
             )}
 
             <div className="input-group">
-                <label htmlFor="alias" className="input-label">
-                    Email Alias
-                </label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <label htmlFor="alias" className="input-label" style={{ marginBottom: 0 }}>
+                        Email Alias
+                    </label>
+                    <button
+                        type="button"
+                        className="random-btn"
+                        onClick={handleRandomize}
+                        title="Generate random alias"
+                    >
+                        <Shuffle size={14} />
+                        Random
+                    </button>
+                </div>
                 <div className="input-with-addon">
                     <input
                         type="text"
@@ -158,7 +203,6 @@ export default function CreateInboxForm() {
                         minLength={3}
                         maxLength={32}
                         required
-                        autoFocus
                         autoComplete="off"
                     />
                     <span className="input-addon">@</span>
