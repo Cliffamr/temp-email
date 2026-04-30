@@ -51,10 +51,21 @@ export async function POST(request: NextRequest) {
         });
 
         if (existingInbox && existingInbox.publicExpiresAt > new Date()) {
-            return NextResponse.json(
-                { error: 'This email address is already in use' },
-                { status: 409 }
-            );
+            // Update last access time
+            await prisma.inbox.update({
+                where: { id: existingInbox.id },
+                data: { lastAccessAt: new Date() },
+            });
+
+            return NextResponse.json({
+                success: true,
+                isRestored: true,
+                data: {
+                    inboxId: existingInbox.id,
+                    address: existingInbox.address,
+                    publicExpiresAt: existingInbox.publicExpiresAt.toISOString(),
+                },
+            });
         }
 
         // Delete expired inbox if exists

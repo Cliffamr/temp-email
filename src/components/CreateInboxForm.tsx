@@ -87,6 +87,12 @@ export default function CreateInboxForm() {
                 return;
             }
 
+            if (data.isRestored) {
+                // If it already existed, just redirect them directly to the inbox
+                router.push(`/inbox/${data.data.inboxId}`);
+                return;
+            }
+
             setCreatedInbox(data.data);
         } catch (err) {
             setError('Network error. Please try again.');
