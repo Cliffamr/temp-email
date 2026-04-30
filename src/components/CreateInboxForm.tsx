@@ -41,7 +41,7 @@ interface CreatedInbox {
 
 export default function CreateInboxForm() {
     const { data: session } = useSession();
-    const isAdmin = session?.user?.role === 'ADMIN';
+    const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN';
 
     const router = useRouter();
     const [alias, setAlias] = useState('');

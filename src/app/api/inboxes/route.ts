@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
 
         // Restrict new inbox creation to ADMIN only
         const session = await auth();
-        const isAdmin = session?.user?.role === 'ADMIN';
+        const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN';
 
         if (!isAdmin) {
              return NextResponse.json(
