@@ -46,6 +46,7 @@ export default function CreateInboxForm() {
     const router = useRouter();
     const [alias, setAlias] = useState('');
     const [selectedDomain, setSelectedDomain] = useState('');
+    const [fullEmailAddress, setFullEmailAddress] = useState('');
     const [domains, setDomains] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -79,11 +80,25 @@ export default function CreateInboxForm() {
         setError('');
         setIsLoading(true);
 
+        let submitAlias = alias;
+        let submitDomain = selectedDomain;
+
+        if (!isLoggedIn) {
+            if (!fullEmailAddress.includes('@')) {
+                setError('Please enter a valid complete email address (e.g., user@domain.com)');
+                setIsLoading(false);
+                return;
+            }
+            const parts = fullEmailAddress.split('@');
+            submitAlias = parts[0];
+            submitDomain = parts[1];
+        }
+
         try {
             const response = await fetch('/api/inboxes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ alias, domain: selectedDomain }),
+                body: JSON.stringify({ alias: submitAlias, domain: submitDomain }),
             });
 
             const data = await response.json();
@@ -182,7 +197,7 @@ export default function CreateInboxForm() {
                 <span>
                     {isLoggedIn 
                         ? 'For testing purposes only. Do not use for sensitive communications.' 
-                        : 'Please enter the temporary email address assigned to you by the admin.'}
+                        : 'Access your existing temporary email assigned by the admin.'}
                 </span>
             </div>
 
@@ -193,70 +208,91 @@ export default function CreateInboxForm() {
                 </div>
             )}
 
-            <div className="input-group">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <label htmlFor="alias" className="input-label" style={{ marginBottom: 0 }}>
-                        Email Alias
-                    </label>
-                    {isLoggedIn && (
-                        <button
-                            type="button"
-                            className="random-btn"
-                            onClick={handleRandomize}
-                            title="Generate random alias"
+            {isLoggedIn ? (
+                <>
+                    <div className="input-group">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                            <label htmlFor="alias" className="input-label" style={{ marginBottom: 0 }}>
+                                Email Alias
+                            </label>
+                            <button
+                                type="button"
+                                className="random-btn"
+                                onClick={handleRandomize}
+                                title="Generate random alias"
+                            >
+                                <Shuffle size={14} />
+                                Random
+                            </button>
+                        </div>
+                        <div className="input-with-addon">
+                            <input
+                                type="text"
+                                id="alias"
+                                className="input"
+                                placeholder="your-alias"
+                                value={alias}
+                                onChange={(e) => setAlias(e.target.value.toLowerCase())}
+                                minLength={3}
+                                maxLength={32}
+                                required
+                                autoComplete="off"
+                            />
+                            <span className="input-addon">@</span>
+                        </div>
+                        <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 8 }}>
+                            3-32 characters. Letters, numbers, dots, hyphens, and underscores allowed.
+                        </p>
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="domain" className="input-label">
+                            Domain
+                        </label>
+                        <select
+                            id="domain"
+                            className="input"
+                            value={selectedDomain}
+                            onChange={(e) => setSelectedDomain(e.target.value)}
+                            required
                         >
-                            <Shuffle size={14} />
-                            Random
-                        </button>
-                    )}
-                </div>
-                <div className="input-with-addon">
+                            {domains.length === 0 ? (
+                                <option value="">Loading domains...</option>
+                            ) : (
+                                domains.map((domain) => (
+                                    <option key={domain} value={domain}>
+                                        {domain}
+                                    </option>
+                                ))
+                            )}
+                        </select>
+                    </div>
+                </>
+            ) : (
+                <div className="input-group">
+                    <label htmlFor="fullEmail" className="input-label">
+                        Email Address
+                    </label>
                     <input
-                        type="text"
-                        id="alias"
+                        type="email"
+                        id="fullEmail"
                         className="input"
-                        placeholder="your-alias"
-                        value={alias}
-                        onChange={(e) => setAlias(e.target.value.toLowerCase())}
-                        minLength={3}
-                        maxLength={32}
+                        placeholder="e.g., yourname@kalane.dev"
+                        value={fullEmailAddress}
+                        onChange={(e) => setFullEmailAddress(e.target.value.toLowerCase())}
                         required
                         autoComplete="off"
                     />
-                    <span className="input-addon">@</span>
+                    <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 8 }}>
+                        Enter the full temporary email address provided to you.
+                    </p>
                 </div>
-                <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 8 }}>
-                    3-32 characters. Letters, numbers, dots, hyphens, and underscores allowed.
-                </p>
-            </div>
-
-            <div className="input-group">
-                <label htmlFor="domain" className="input-label">
-                    Domain
-                </label>
-                <select
-                    id="domain"
-                    className="input"
-                    value={selectedDomain}
-                    onChange={(e) => setSelectedDomain(e.target.value)}
-                    required
-                >
-                    {domains.length === 0 ? (
-                        <option value="">Loading domains...</option>
-                    ) : (
-                        domains.map((domain) => (
-                            <option key={domain} value={domain}>
-                                {domain}
-                            </option>
-                        ))
-                    )}
-                </select>
-            </div>
+            )}
 
             <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={isLoading || !alias || !selectedDomain}
+                disabled={isLoading || (isLoggedIn ? (!alias || !selectedDomain) : !fullEmailAddress)}
                 style={{ width: '100%', marginTop: 8 }}
             >
                 {isLoading ? (
