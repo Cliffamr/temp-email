@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Check, Copy, AlertTriangle, Info, X, Shuffle } from 'lucide-react';
 
 const ADJECTIVES = [
@@ -39,6 +40,9 @@ interface CreatedInbox {
 }
 
 export default function CreateInboxForm() {
+    const { data: session } = useSession();
+    const isAdmin = session?.user?.role === 'ADMIN';
+
     const router = useRouter();
     const [alias, setAlias] = useState('');
     const [selectedDomain, setSelectedDomain] = useState('');
@@ -53,8 +57,10 @@ export default function CreateInboxForm() {
     }, []);
 
     useEffect(() => {
-        // Auto-generate a random alias on mount
-        handleRandomize();
+        // Auto-generate a random alias on mount only for admins
+        if (isAdmin) {
+            handleRandomize();
+        }
 
         // Fetch available domains
         fetch('/api/inboxes')
@@ -173,7 +179,11 @@ export default function CreateInboxForm() {
         <form onSubmit={handleSubmit} className="card" style={{ maxWidth: 560, margin: '0 auto' }}>
             <div className="alert alert-info" style={{ marginBottom: 24 }}>
                 <Info size={20} />
-                <span>For testing purposes only. Do not use for sensitive communications.</span>
+                <span>
+                    {isAdmin 
+                        ? 'For testing purposes only. Do not use for sensitive communications.' 
+                        : 'Please enter the temporary email address assigned to you by the admin.'}
+                </span>
             </div>
 
             {error && (
@@ -188,15 +198,17 @@ export default function CreateInboxForm() {
                     <label htmlFor="alias" className="input-label" style={{ marginBottom: 0 }}>
                         Email Alias
                     </label>
-                    <button
-                        type="button"
-                        className="random-btn"
-                        onClick={handleRandomize}
-                        title="Generate random alias"
-                    >
-                        <Shuffle size={14} />
-                        Random
-                    </button>
+                    {isAdmin && (
+                        <button
+                            type="button"
+                            className="random-btn"
+                            onClick={handleRandomize}
+                            title="Generate random alias"
+                        >
+                            <Shuffle size={14} />
+                            Random
+                        </button>
+                    )}
                 </div>
                 <div className="input-with-addon">
                     <input
@@ -250,10 +262,10 @@ export default function CreateInboxForm() {
                 {isLoading ? (
                     <>
                         <span className="spinner" style={{ width: 16, height: 16 }}></span>
-                        Creating...
+                        Processing...
                     </>
                 ) : (
-                    'Create Inbox'
+                    isAdmin ? 'Create Inbox' : 'Access Inbox'
                 )}
             </button>
         </form>

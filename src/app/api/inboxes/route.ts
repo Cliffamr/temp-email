@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { generateToken, hashToken, getPublicExpirationDate } from '@/lib/crypto';
 import { validateAlias, validateDomain, getAllowedDomains } from '@/lib/validation';
+import { auth } from '@/auth';
 
 // Force dynamic rendering to prevent build-time DB access
 export const dynamic = 'force-dynamic';
@@ -66,6 +67,17 @@ export async function POST(request: NextRequest) {
                     publicExpiresAt: existingInbox.publicExpiresAt.toISOString(),
                 },
             });
+        }
+
+        // Restrict new inbox creation to ADMIN only
+        const session = await auth();
+        const isAdmin = session?.user?.role === 'ADMIN';
+
+        if (!isAdmin) {
+             return NextResponse.json(
+                 { error: 'Email tidak ditemukan atau sudah kedaluwarsa. Hanya Admin yang dapat membuat email baru.' },
+                 { status: 403 }
+             );
         }
 
         // Delete expired inbox if exists
