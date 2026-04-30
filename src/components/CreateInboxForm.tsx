@@ -41,7 +41,7 @@ interface CreatedInbox {
 
 export default function CreateInboxForm() {
     const { data: session } = useSession();
-    const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN';
+    const isLoggedIn = !!session?.user;
 
     const router = useRouter();
     const [alias, setAlias] = useState('');
@@ -57,8 +57,8 @@ export default function CreateInboxForm() {
     }, []);
 
     useEffect(() => {
-        // Auto-generate a random alias on mount only for admins
-        if (isAdmin) {
+        // Auto-generate a random alias on mount only for logged in users
+        if (isLoggedIn) {
             handleRandomize();
         }
 
@@ -180,7 +180,7 @@ export default function CreateInboxForm() {
             <div className="alert alert-info" style={{ marginBottom: 24 }}>
                 <Info size={20} />
                 <span>
-                    {isAdmin 
+                    {isLoggedIn 
                         ? 'For testing purposes only. Do not use for sensitive communications.' 
                         : 'Please enter the temporary email address assigned to you by the admin.'}
                 </span>
@@ -198,7 +198,7 @@ export default function CreateInboxForm() {
                     <label htmlFor="alias" className="input-label" style={{ marginBottom: 0 }}>
                         Email Alias
                     </label>
-                    {isAdmin && (
+                    {isLoggedIn && (
                         <button
                             type="button"
                             className="random-btn"
@@ -265,7 +265,7 @@ export default function CreateInboxForm() {
                         Processing...
                     </>
                 ) : (
-                    isAdmin ? 'Create Inbox' : 'Access Inbox'
+                    isLoggedIn ? 'Create Inbox' : 'Access Inbox'
                 )}
             </button>
         </form>

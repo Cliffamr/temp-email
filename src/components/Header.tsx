@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Mail, Settings, LogOut, Shield, Menu, X } from 'lucide-react';
+import { Mail, Settings, LogOut, Shield, Menu, X, LogIn } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -47,14 +47,21 @@ export default function Header() {
                             Admin
                         </Link>
                     )}
-                    <button
-                        onClick={() => signOut({ callbackUrl: '/login' })}
-                        className="btn btn-ghost"
-                        style={{ color: 'var(--text-secondary)' }}
-                    >
-                        <LogOut size={16} style={{ marginRight: '4px' }} />
-                        Logout
-                    </button>
+                    {session ? (
+                        <button
+                            onClick={() => signOut({ callbackUrl: '/login' })}
+                            className="btn btn-ghost"
+                            style={{ color: 'var(--text-secondary)' }}
+                        >
+                            <LogOut size={16} style={{ marginRight: '4px' }} />
+                            Logout
+                        </button>
+                    ) : (
+                        <Link href="/login" className="btn btn-ghost" style={{ color: 'var(--text-secondary)' }}>
+                            <LogIn size={16} style={{ marginRight: '4px' }} />
+                            Login
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Mobile Nav Overlay */}
@@ -77,17 +84,24 @@ export default function Header() {
                                     Admin
                                 </Link>
                             )}
-                            <button
-                                onClick={() => {
-                                    toggleMenu();
-                                    signOut({ callbackUrl: '/login' });
-                                }}
-                                className="btn btn-ghost mobile-nav-item"
-                                style={{ color: 'var(--text-secondary)' }}
-                            >
-                                <LogOut size={16} style={{ marginRight: '4px' }} />
-                                Logout
-                            </button>
+                            {session ? (
+                                <button
+                                    onClick={() => {
+                                        toggleMenu();
+                                        signOut({ callbackUrl: '/login' });
+                                    }}
+                                    className="btn btn-ghost mobile-nav-item"
+                                    style={{ color: 'var(--text-secondary)' }}
+                                >
+                                    <LogOut size={16} style={{ marginRight: '4px' }} />
+                                    Logout
+                                </button>
+                            ) : (
+                                <Link href="/login" className="btn btn-ghost mobile-nav-item" style={{ color: 'var(--text-secondary)' }} onClick={toggleMenu}>
+                                    <LogIn size={16} style={{ marginRight: '4px' }} />
+                                    Login
+                                </Link>
+                            )}
                         </nav>
                     </div>
                 )}

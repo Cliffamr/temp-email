@@ -69,13 +69,13 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // Restrict new inbox creation to ADMIN only
+        // Restrict new inbox creation to logged-in users only
         const session = await auth();
-        const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN';
+        const isLoggedIn = !!session?.user;
 
-        if (!isAdmin) {
+        if (!isLoggedIn) {
              return NextResponse.json(
-                 { error: 'Email tidak ditemukan atau sudah kedaluwarsa. Hanya Admin yang dapat membuat email baru.' },
+                 { error: 'Email tidak ditemukan atau sudah kedaluwarsa. Hanya pengguna terdaftar yang dapat membuat email baru.' },
                  { status: 403 }
              );
         }
