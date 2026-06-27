@@ -7,6 +7,17 @@ import { auth } from '@/auth';
 // Force dynamic rendering to prevent build-time DB access
 export const dynamic = 'force-dynamic';
 
+function hasValidAutomationApiKey(request: NextRequest) {
+    const apiKey = process.env.TEMPMAIL_API_KEY;
+    if (!apiKey) return false;
+
+    const authHeader = request.headers.get('authorization') || '';
+    const bearerToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
+    const xApiKey = request.headers.get('x-api-key') || '';
+
+    return bearerToken === apiKey || xApiKey === apiKey;
+}
+
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
@@ -72,8 +83,9 @@ export async function POST(request: NextRequest) {
         // Restrict new inbox creation to logged-in users only
         const session = await auth();
         const isLoggedIn = !!session?.user;
+        const hasApiKey = hasValidAutomationApiKey(request);
 
-        if (!isLoggedIn) {
+        if (!isLoggedIn && !hasApiKey) {
              return NextResponse.json(
                  { error: 'Email tidak ditemukan atau sudah kedaluwarsa. Hanya pengguna terdaftar yang dapat membuat email baru.' },
                  { status: 403 }
