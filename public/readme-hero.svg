@@ -1,0 +1,70 @@
+<svg width="1200" height="460" viewBox="0 0 1200 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="80" y1="20" x2="1120" y2="440" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07111F"/>
+      <stop offset="0.55" stop-color="#102742"/>
+      <stop offset="1" stop-color="#102A24"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="424" y1="90" x2="792" y2="390" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#56E0C4"/>
+      <stop offset="1" stop-color="#61A9FF"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#000" flood-opacity="0.32"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="460" rx="30" fill="url(#bg)"/>
+  <circle cx="106" cy="68" r="110" fill="#56E0C4" fill-opacity="0.08"/>
+  <circle cx="1090" cy="398" r="180" fill="#61A9FF" fill-opacity="0.09"/>
+  <path d="M0 345C176 294 276 403 470 351C668 298 789 202 1200 260V460H0V345Z" fill="#FFF" fill-opacity="0.025"/>
+  <g opacity="0.45">
+    <circle cx="74" cy="383" r="3" fill="#56E0C4"/><circle cx="112" cy="383" r="3" fill="#56E0C4"/><circle cx="150" cy="383" r="3" fill="#56E0C4"/>
+    <circle cx="1050" cy="80" r="3" fill="#61A9FF"/><circle cx="1088" cy="80" r="3" fill="#61A9FF"/><circle cx="1126" cy="80" r="3" fill="#61A9FF"/>
+  </g>
+  <g transform="translate(740 74)" filter="url(#shadow)">
+    <rect width="350" height="294" rx="24" fill="#102033" stroke="#426078"/>
+    <rect x="20" y="20" width="310" height="52" rx="14" fill="#172D43"/>
+    <circle cx="48" cy="46" r="13" fill="url(#accent)"/>
+    <rect x="72" y="36" width="116" height="9" rx="4.5" fill="#D7E7F5"/>
+    <rect x="72" y="52" width="78" height="7" rx="3.5" fill="#6E8CA4"/>
+    <g transform="translate(20 92)">
+      <rect width="310" height="76" rx="14" fill="#14283C" stroke="#29485F"/>
+      <circle cx="31" cy="28" r="13" fill="#56E0C4" fill-opacity="0.16"/>
+      <path d="M23 24L31 30L39 24V34H23V24Z" stroke="#56E0C4" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="56" y="20" width="124" height="9" rx="4.5" fill="#E7F2FA"/>
+      <rect x="56" y="39" width="218" height="7" rx="3.5" fill="#63839B"/>
+      <rect x="56" y="53" width="170" height="7" rx="3.5" fill="#47657C"/>
+    </g>
+    <g transform="translate(20 180)">
+      <rect width="310" height="76" rx="14" fill="#14283C" stroke="#29485F"/>
+      <circle cx="31" cy="28" r="13" fill="#61A9FF" fill-opacity="0.16"/>
+      <path d="M23 24L31 30L39 24V34H23V24Z" stroke="#61A9FF" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="56" y="20" width="98" height="9" rx="4.5" fill="#E7F2FA"/>
+      <rect x="56" y="39" width="232" height="7" rx="3.5" fill="#63839B"/>
+      <rect x="56" y="53" width="142" height="7" rx="3.5" fill="#47657C"/>
+    </g>
+    <rect x="100" y="274" width="150" height="40" rx="20" fill="url(#accent)"/>
+    <text x="175" y="299" text-anchor="middle" fill="#07111F" font-family="Arial, sans-serif" font-size="14" font-weight="700">INBOX READY</text>
+  </g>
+  <g transform="translate(88 96)">
+    <g>
+      <rect width="72" height="72" rx="20" fill="url(#accent)"/>
+      <path d="M20 24H52V48H20V24Z" stroke="#07111F" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M21 26L36 38L51 26" stroke="#07111F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <text x="0" y="124" fill="#F6FBFF" font-family="Arial, sans-serif" font-size="55" font-weight="800" letter-spacing="-2">Temp Email</text>
+    <text x="0" y="164" fill="#8EA9BE" font-family="Arial, sans-serif" font-size="20">Disposable inboxes. Real-time delivery. Zero noise.</text>
+    <g transform="translate(0 202)">
+      <rect width="148" height="38" rx="19" fill="#56E0C4" fill-opacity="0.12" stroke="#56E0C4" stroke-opacity="0.45"/>
+      <circle cx="20" cy="19" r="5" fill="#56E0C4"/>
+      <text x="34" y="25" fill="#BDF8EC" font-family="Arial, sans-serif" font-size="14" font-weight="600">24H INBOX</text>
+      <rect x="160" width="176" height="38" rx="19" fill="#61A9FF" fill-opacity="0.12" stroke="#61A9FF" stroke-opacity="0.45"/>
+      <circle cx="180" cy="19" r="5" fill="#61A9FF"/>
+      <text x="194" y="25" fill="#CDE6FF" font-family="Arial, sans-serif" font-size="14" font-weight="600">HMAC SECURED</text>
+    </g>
+  </g>
+  <circle cx="702" cy="310" r="48" fill="#56E0C4" fill-opacity="0.10" filter="url(#glow)"/>
+</svg>
