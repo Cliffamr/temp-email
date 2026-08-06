@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Copy, Check, Eye, EyeOff, Trash2, Shield, Clock } from 'lucide-react';
 import { generateTOTP, isValidBase32, getTimeRemaining, getProgress, normalizeSecret } from '@/lib/totp';
 
-export default function TwoFactorAuthenticator() {
-    const [secret, setSecret] = useState('');
+export default function TwoFactorAuthenticator({ defaultSecret = '' }: { defaultSecret?: string }) {
+    const [secret, setSecret] = useState(defaultSecret.toUpperCase());
     const [showSecret, setShowSecret] = useState(false);
     const [otp, setOtp] = useState('');
     const [timeRemaining, setTimeRemaining] = useState(30);
