@@ -5,6 +5,14 @@
 
 import * as OTPAuth from 'otpauth';
 
+export function calculateClockOffset(
+    serverTimestamp: number,
+    requestStartedAt: number,
+    responseReceivedAt: number
+): number {
+    return serverTimestamp - ((requestStartedAt + responseReceivedAt) / 2);
+}
+
 /**
  * Validate Base32 secret format
  */
@@ -39,6 +47,7 @@ export function generateTOTP(
         digits?: number;
         period?: number;
         algorithm?: 'SHA1' | 'SHA256' | 'SHA512';
+        timestamp?: number;
     }
 ): string {
     const totp = new OTPAuth.TOTP({
@@ -48,21 +57,36 @@ export function generateTOTP(
         algorithm: options?.algorithm ?? 'SHA1',
     });
 
-    return totp.generate();
+    return totp.generate({ timestamp: options?.timestamp });
+}
+
+/**
+ * Get the TOTP time-step for detecting period changes after timer throttling.
+ */
+export function getTOTPTimeStep(timestamp: number = Date.now(), period: number = 30): number {
+    return Math.floor(timestamp / 1000 / period);
+}
+
+export function shouldRefreshTOTP(
+    previousTimeStep: number,
+    timestamp: number = Date.now(),
+    period: number = 30
+): boolean {
+    return getTOTPTimeStep(timestamp, period) !== previousTimeStep;
 }
 
 /**
  * Get time remaining in current TOTP window (in seconds)
  */
-export function getTimeRemaining(period: number = 30): number {
-    const now = Math.floor(Date.now() / 1000);
+export function getTimeRemaining(period: number = 30, timestamp: number = Date.now()): number {
+    const now = Math.floor(timestamp / 1000);
     return period - (now % period);
 }
 
 /**
  * Get progress percentage for current TOTP window (0-100)
  */
-export function getProgress(period: number = 30): number {
-    const remaining = getTimeRemaining(period);
+export function getProgress(period: number = 30, timestamp: number = Date.now()): number {
+    const remaining = getTimeRemaining(period, timestamp);
     return (remaining / period) * 100;
 }

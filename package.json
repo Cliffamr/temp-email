@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "sh -c 'rm -rf .test-dist; trap \"rm -rf .test-dist\" EXIT; tsc src/lib/totp.ts --outDir .test-dist --module commonjs --target ES2020 --moduleResolution node --esModuleInterop --skipLibCheck --noEmit false && node --test test/totp.test.cjs'"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Copy, Check, Eye, EyeOff, Trash2, Shield, Clock } from 'lucide-react';
-import { generateTOTP, isValidBase32, getTimeRemaining, getProgress, normalizeSecret } from '@/lib/totp';
+import { calculateClockOffset, generateTOTP, isValidBase32, getTimeRemaining, getProgress, getTOTPTimeStep, normalizeSecret, shouldRefreshTOTP } from '@/lib/totp';
 
 export default function TwoFactorAuthenticator({ defaultSecret = '' }: { defaultSecret?: string }) {
     const [secret, setSecret] = useState(defaultSecret.toUpperCase());
@@ -12,12 +12,16 @@ export default function TwoFactorAuthenticator({ defaultSecret = '' }: { default
     const [progress, setProgress] = useState(100);
     const [copied, setCopied] = useState<'otp' | 'secret' | null>(null);
     const [error, setError] = useState('');
+    const [clockOffset, setClockOffset] = useState(0);
+    const lastTimeStep = useRef(getTOTPTimeStep());
 
     // Generate OTP when secret changes or timer expires
     const updateOTP = useCallback(() => {
         if (secret && isValidBase32(secret)) {
             try {
-                const code = generateTOTP(secret);
+                const timestamp = Date.now() + clockOffset;
+                const code = generateTOTP(secret, { timestamp });
+                lastTimeStep.current = getTOTPTimeStep(timestamp);
                 setOtp(code);
                 setError('');
             } catch {
@@ -31,29 +35,55 @@ export default function TwoFactorAuthenticator({ defaultSecret = '' }: { default
             setOtp('');
             setError('');
         }
-    }, [secret]);
+    }, [clockOffset, secret]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        const requestStartedAt = Date.now();
+
+        fetch('/api/time', { cache: 'no-store', signal: controller.signal })
+            .then((response) => {
+                if (!response.ok) throw new Error('Time sync failed');
+                return response.json() as Promise<{ now?: unknown }>;
+            })
+            .then(({ now }) => {
+                const responseReceivedAt = Date.now();
+                if (typeof now === 'number' && Number.isFinite(now)) {
+                    setClockOffset(calculateClockOffset(now, requestStartedAt, responseReceivedAt));
+                }
+            })
+            .catch(() => {
+                // Browser time remains the fail-soft fallback when sync is unavailable.
+            });
+
+        return () => controller.abort();
+    }, []);
 
     // Timer effect
     useEffect(() => {
         const interval = setInterval(() => {
-            const remaining = getTimeRemaining();
-            const prog = getProgress();
+            const now = Date.now() + clockOffset;
+            const remaining = getTimeRemaining(30, now);
+            const prog = getProgress(30, now);
 
             setTimeRemaining(remaining);
             setProgress(prog);
 
-            // Regenerate OTP when timer resets
-            if (remaining === 30) {
+            // Browser timers may skip the exact boundary while a tab is throttled.
+            const timeStep = getTOTPTimeStep(now);
+            if (shouldRefreshTOTP(lastTimeStep.current, now)) {
+                lastTimeStep.current = timeStep;
                 updateOTP();
             }
         }, 100);
 
         return () => clearInterval(interval);
-    }, [updateOTP]);
+    }, [clockOffset, updateOTP]);
 
     // Initial OTP generation
     useEffect(() => {
-        updateOTP();
+        const timeout = setTimeout(updateOTP, 0);
+        return () => clearTimeout(timeout);
     }, [updateOTP]);
 
     const copyToClipboard = async (text: string, type: 'otp' | 'secret') => {
